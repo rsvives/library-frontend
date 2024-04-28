@@ -29,7 +29,8 @@ module.exports = {
   ],
   rules: {
     'react/jsx-no-target-blank': 'off',
-    'react/react-in-jsx-scope': 'off'
+    'react/react-in-jsx-scope': 'off',
+    'react/prop-types': 'warn'
 
   }
 

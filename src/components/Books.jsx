@@ -6,6 +6,7 @@ const Books = (props) => {
   if (query.loading) return <div>...loading</div>
 
   const books = query.data.allBooks
+  console.log(books)
 
   return (
     <div>

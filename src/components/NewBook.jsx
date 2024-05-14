@@ -17,7 +17,7 @@ const NewBook = (props) => {
       variables: { title, author, published: Number(published), genres },
       refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
     })
-    console.log('add book...')
+    console.log('add book...', { title, author, published })
 
     setTitle('')
     setPublished('')

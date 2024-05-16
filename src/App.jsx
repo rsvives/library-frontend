@@ -1,8 +1,10 @@
-// import { useState } from 'react'
+import { useState } from 'react'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import Login from './components/Login'
 import { Routes, Route, Link } from 'react-router-dom'
+import { useApolloClient } from '@apollo/client'
 
 const App = () => {
   const navStyle = {
@@ -20,23 +22,39 @@ const App = () => {
       borderRadius: 4
     }
   }
+  const client = useApolloClient()
+  const [token, setToken] = useState(localStorage.getItem('library-user-token'))
+  const logout = () => {
+    setToken(null)
+    localStorage.clear()
+    client.resetStore()
+  }
 
-  return (
-    <div>
-      <header>
-        <nav style={navStyle.nav}>
+  const menu = !token
+    ? (<nav style={navStyle.nav}>
+          <Link style={navStyle.link} to={'/authors'}>authors</Link>
+          <Link style={navStyle.link} to={'/books'}>books</Link>
+          <Link style={navStyle.link} to={'/login'}>login</Link>
+        </nav>)
+
+    : (<nav style={navStyle.nav}>
           <Link style={navStyle.link} to={'/authors'}>authors</Link>
           <Link style={navStyle.link} to={'/books'}>books</Link>
           <Link style={navStyle.link} to={'/newBook'}>add book</Link>
-        </nav>
+          <button style={navStyle.link} onClick={logout} >logout</button>
+    </nav>)
+  return (
+    <div>
+      <header>
+        {menu}
       </header>
 
     <Routes>
       <Route path='/authors' element={<Authors/>}/>
       <Route path='/books' element={<Books/>}/>
-      <Route path='/newBook' element={<NewBook/>}/>
+      <Route path='/login' element={<Login setToken={setToken}/>}/>
+      <Route path='/newBook' element={<NewBook token={token}/>}/>
       <Route path='/*' element={<Authors/>}/>
-
     </Routes>
     </div>
   )

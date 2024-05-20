@@ -2,9 +2,10 @@ import { useMutation } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries'
 import { useNavigate } from 'react-router-dom'
+import { useField } from '../hooks/useField'
 
 const NewBook = ({ token }) => {
-  const [title, setTitle] = useState('')
+  const title = useField('text')
   const [author, setAuthor] = useState('')
   const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
@@ -22,12 +23,12 @@ const NewBook = ({ token }) => {
   const submit = async (event) => {
     event.preventDefault()
     addBook({
-      variables: { title, author, published: Number(published), genres },
+      variables: { title: title.input.value, author, published: Number(published), genres },
       refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }]
     })
     console.log('add book...', { title, author, published })
 
-    setTitle('')
+    title.clear()
     setPublished('')
     setAuthor('')
     setGenres([])
@@ -45,8 +46,7 @@ const NewBook = ({ token }) => {
         <div>
           title
           <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
+            {...title.input}
           />
         </div>
         <div>

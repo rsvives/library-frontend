@@ -4,9 +4,9 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
 import { Routes, Route, Link } from 'react-router-dom'
-import { useApolloClient, useQuery } from '@apollo/client'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Recommendations } from './components/Recommendations'
-import { ME } from './queries'
+import { BOOK_ADDED, ME } from './queries'
 
 const App = () => {
   const navStyle = {
@@ -32,6 +32,13 @@ const App = () => {
     localStorage.clear()
     client.resetStore()
   }
+  useSubscription(BOOK_ADDED, {
+    onError: (error) => { console.log(error) },
+    onData: ({ data }) => {
+      console.log(data)
+      alert(`The book ${data.data.bookAdded.title} was added`)
+    }
+  })
 
   const menu = !token
     ? (<nav style={navStyle.nav}>

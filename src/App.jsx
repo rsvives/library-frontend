@@ -6,7 +6,7 @@ import Login from './components/Login'
 import { Routes, Route, Link } from 'react-router-dom'
 import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import { Recommendations } from './components/Recommendations'
-import { BOOK_ADDED, ME } from './queries'
+import { ALL_BOOKS, BOOK_ADDED, ME } from './queries'
 
 const App = () => {
   const navStyle = {
@@ -37,6 +37,11 @@ const App = () => {
     onData: ({ data }) => {
       console.log(data)
       alert(`The book ${data.data.bookAdded.title} was added`)
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(data.data.bookAdded)
+        }
+      })
     }
   })
 
